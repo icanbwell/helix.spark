@@ -33,5 +33,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: build docker images
         run: |
-          /usr/local/spark/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -p /usr/local/spark/kubernetes/dockerfiles/spark/bindings/python/Dockerfile build
+          /usr/local/spark/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -p /usr/local/spark/kubernetes/dockerfiles/spark/bindings/python/Dockerfile build -b java_image_tag=14-slim build
           /usr/local/spark/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -p /usr/local/spark/kubernetes/dockerfiles/spark/bindings/python/Dockerfile push
