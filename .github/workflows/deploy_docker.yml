@@ -9,6 +9,7 @@ on:
 jobs:
   build_and_test:
     # The type of runner that the job will run on
+    # uses https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh
     runs-on: ubuntu-latest
 
     steps:
@@ -34,5 +35,5 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
       - name: build docker images
         run: |
-          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=14-slim build
-          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile push
+          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=14-slim build
+          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile push
