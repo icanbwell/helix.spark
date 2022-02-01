@@ -10,6 +10,8 @@ jobs:
   build_and_test:
     # The type of runner that the job will run on
     # uses https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh
+    # export ARCHS=--platform linux/arm/v7,linux/arm64/v8,linux/amd64
+
     runs-on: ubuntu-latest
 
     steps:
@@ -36,6 +38,5 @@ jobs:
       - name: build docker images
         run: |
           docker buildx create --use
-#          export ARCHS=--platform linux/arm/v7,linux/arm64/v8,linux/amd64
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=14-slim build
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile push
