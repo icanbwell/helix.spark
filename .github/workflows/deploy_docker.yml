@@ -45,4 +45,4 @@ jobs:
       - name: build docker images
         run: |
           docker buildx create --use
-          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17 -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
+          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -f kubernetes/dockerfiles/spark/Dockerfile.java17 -p kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
