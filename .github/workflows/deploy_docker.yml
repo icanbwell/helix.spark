@@ -49,5 +49,5 @@ jobs:
           curl https://raw.githubusercontent.com/apache/spark/master/resource-managers/kubernetes/docker/src/main/dockerfiles/spark/Dockerfile.java17 --output $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17
           ls -halt $SPARK_HOME/kubernetes/dockerfiles/spark
           cat $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17
-          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=14-slim build
+          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t ${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=15-slim build
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java17-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17 -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
