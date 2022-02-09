@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License. See accompanying LICENSE file.
+-->
+
+<!-- Put site-specific property overrides in this file. -->
+
+<configuration>
+
+    <property>
+        <name>fs.s3a.aws.credentials.provider</name>
+        <value>
+            com.amazonaws.auth.EC2ContainerCredentialsProviderWrapper,
+            com.amazonaws.auth.DefaultAWSCredentialsProviderChain,
+            org.apache.hadoop.fs.s3a.SimpleAWSCredentialsProvider,
+            com.amazonaws.auth.EnvironmentVariableCredentialsProvider,
+            com.amazonaws.auth.InstanceProfileCredentialsProvider
+        </value>
+        <description>
+            Comma-separated class names of credential provider classes which implement
+            com.amazonaws.auth.AWSCredentialsProvider.
+
+            These are loaded and queried in sequence for a valid set of credentials.
+            Each listed class must implement one of the following means of
+            construction, which are attempted in order:
+            1. a public constructor accepting java.net.URI and
+            org.apache.hadoop.conf.Configuration,
+            2. a public static method named getInstance that accepts no
+            arguments and returns an instance of
+            com.amazonaws.auth.AWSCredentialsProvider, or
+            3. a public default constructor.
+
+            Specifying org.apache.hadoop.fs.s3a.AnonymousAWSCredentialsProvider allows
+            anonymous access to a publicly accessible S3 bucket without any credentials.
+            Please note that allowing anonymous access to an S3 bucket compromises
+            security and therefore is unsuitable for most use cases. It can be useful
+            for accessing public data sets without requiring AWS credentials.
+
+            If unspecified, then the default list of credential provider classes,
+            queried in sequence, is:
+            1. org.apache.hadoop.fs.s3a.BasicAWSCredentialsProvider: supports
+            static configuration of AWS access key ID and secret access key.
+            See also fs.s3a.access.key and fs.s3a.secret.key.
+            2. com.amazonaws.auth.EnvironmentVariableCredentialsProvider: supports
+            configuration of AWS access key ID and secret access key in
+            environment variables named AWS_ACCESS_KEY_ID and
+            AWS_SECRET_ACCESS_KEY, as documented in the AWS SDK.
+            3. com.amazonaws.auth.InstanceProfileCredentialsProvider: supports use
+            of instance profile credentials if running in an EC2 VM.
+        </description>
+    </property>
+
+
+    <property>
+        <name>fs.s3a.committer.name</name>
+        <value>directory</value>
+        <description>
+            Committer to create for output to S3A, one of:
+            "file", "directory", "partitioned", "magic".
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.committer.magic.enabled</name>
+        <value>false</value>
+        <description>
+            Enable support in the filesystem for the S3 "Magic" committer.
+            When working with AWS S3, S3Guard must be enabled for the destination
+            bucket, as consistent metadata listings are required.
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.committer.threads</name>
+        <value>8</value>
+        <description>
+            Number of threads in committers for parallel operations on files
+            (upload, commit, abort, delete...)
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.committer.staging.tmp.path</name>
+        <value>tmp/staging</value>
+        <description>
+            Path in the cluster filesystem for temporary data.
+            This is for HDFS, not the local filesystem.
+            It is only for the summary data of each file, not the actual
+            data being committed.
+            Using an unqualified path guarantees that the full path will be
+            generated relative to the home directory of the user creating the job,
+            hence private (assuming home directory permissions are secure).
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.committer.staging.unique-filenames</name>
+        <value>true</value>
+        <description>
+            Option for final files to have a unique name through job attempt info,
+            or the value of fs.s3a.committer.staging.uuid
+            When writing data with the "append" conflict option, this guarantees
+            that new data will not overwrite any existing data.
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.committer.staging.conflict-mode</name>
+        <value>fail</value>
+        <description>
+            Staging committer conflict resolution policy.
+            Supported: "fail", "append", "replace".
+        </description>
+    </property>
+
+    <property>
+        <name>s.s3a.committer.staging.abort.pending.uploads</name>
+        <value>true</value>
+        <description>
+            Should the staging committers abort all pending uploads to the destination
+            directory?
+
+            Changing this if more than one partitioned committer is
+            writing to the same destination tree simultaneously; otherwise
+            the first job to complete will cancel all outstanding uploads from the
+            others. However, it may lead to leaked outstanding uploads from failed
+            tasks. If disabled, configure the bucket lifecycle to remove uploads
+            after a time period, and/or set up a workflow to explicitly delete
+            entries. Otherwise there is a risk that uncommitted uploads may run up
+            bills.
+        </description>
+    </property>
+
+    <property>
+        <name>mapreduce.outputcommitter.factory.scheme.s3a</name>
+        <value>org.apache.hadoop.fs.s3a.commit.S3ACommitterFactory</value>
+        <description>
+            The committer factory to use when writing data to S3A filesystems.
+            If mapreduce.outputcommitter.factory.class is set, it will
+            override this property.
+
+            (This property is set in mapred-default.xml)
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.fast.upload</name>
+        <value>true</value>
+        <description>
+            Use the incremental block upload mechanism with
+            the buffering mechanism set in fs.s3a.fast.upload.buffer.
+            The number of threads performing uploads in the filesystem is defined
+            by fs.s3a.threads.max; the queue of waiting uploads limited by
+            fs.s3a.max.total.tasks.
+            The size of each buffer is set by fs.s3a.multipart.size.
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.fast.upload.buffer</name>
+        <value>disk</value>
+        <description>
+            The buffering mechanism to use when using S3A fast upload
+            (fs.s3a.fast.upload=true). Values: disk, array, bytebuffer.
+            This configuration option has no effect if fs.s3a.fast.upload is false.
+
+            "disk" will use the directories listed in fs.s3a.buffer.dir as
+            the location(s) to save data prior to being uploaded.
+
+            "array" uses arrays in the JVM heap
+
+            "bytebuffer" uses off-heap memory within the JVM.
+
+            Both "array" and "bytebuffer" will consume memory in a single stream up to the number
+            of blocks set by:
+
+            fs.s3a.multipart.size * fs.s3a.fast.upload.active.blocks.
+
+            If using either of these mechanisms, keep this value low
+
+            The total number of threads performing work across all threads is set by
+            fs.s3a.threads.max, with fs.s3a.max.total.tasks values setting the number of queued
+            work items.
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.multipart.size</name>
+        <value>100M</value>
+        <description>How big (in bytes) to split upload or copy operations up into.
+            A suffix from the set {K,M,G,T,P} may be used to scale the numeric value.
+        </description>
+    </property>
+
+    <property>
+        <name>fs.s3a.fast.upload.active.blocks</name>
+        <value>8</value>
+        <description>
+            Maximum Number of blocks a single output stream can have
+            active (uploading, or queued to the central FileSystem
+            instance's pool of queued operations.
+
+            This stops a single stream overloading the shared thread pool.
+        </description>
+    </property>
+
+
+</configuration>

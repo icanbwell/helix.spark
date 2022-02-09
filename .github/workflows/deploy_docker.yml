@@ -21,7 +21,7 @@ jobs:
           python-version: '3.7'
       - uses: actions/setup-java@v1
         with:
-          java-version: '14'
+          java-version: '15'
       - uses: vemonet/setup-spark@v1
         with:
           spark-version: '3.1.1' # Exact version
@@ -33,7 +33,7 @@ jobs:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
-          image: tonistiigi/binfmt:latest
+#          image: tonistiigi/binfmt:latest
           platforms: arm64,arm
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v1
@@ -51,3 +51,4 @@ jobs:
           cat $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java15-latest -t java15-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=15-slim build
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java17-latest -t java17-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17 -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
+          docker buildx build --platform=linux/amd64,linux/arm64 -r imranq2 -t latest -t ${{ steps.previoustag.outputs.tag }} .

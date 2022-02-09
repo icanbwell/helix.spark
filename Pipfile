@@ -1,0 +1,66 @@
+[[source]]
+url = "https://pypi.python.org/simple"
+verify_ssl = true
+name = "pypi"
+
+[packages]
+wheel = ">=0.36.2"
+sparkpipelineframework = "==1.0.6"
+"sparkpipelineframework.testing" = "==1.1.3"
+sparkautomapper = "==0.2.53"
+"sparkautomapper.fhir" = "==1.0.7"
+"sparkdataframecomparer" = "==0.1.68"
+"sparkfhirschemas" = "==0.1.33"
+pyspark = "==3.1.1"
+py4j = ">=0.10.9"
+requests = ">=2.25.1"
+furl = ">=2.1.2"
+structlog = ">=21.1.0"
+boto3 = ">=1.18.56"
+virtualenv = ">=20.4.3"
+"helix.events.sdk" = "==0.1.0"
+smart-open = {extras = ["s3"], version = "==4.0.1"}
+pymongo="==3.11.4"
+pyathena = ">=2.3.0"
+fastjsonschema= ">=2.15.1"
+"helix.fhir.client.sdk" = "==0.1.48"
+elasticsearch="==7.13.3"
+elasticsearch-dsl=">=7.0.0,<8.0.0"
+"helix.catalog-sdk" = "==0.2.2"
+types-dataclasses="~=0.1.4"
+types-requests="~=0.1.11"
+types-PyMySQL="~=0.1.5"
+typed-ast = "*"
+slack_sdk = ">=3.11.2"
+
+[dev-packages]
+pre-commit = ">=2.13.0"
+autoflake=">=1.4"
+flake8 = ">=3.9.2"
+mypy = ">=0.812,<1.000"
+pytest = ">=6.2.4"
+importlib-metadata = "<2.0"
+deepdiff = { version = ">=5.5.0", extras = ["murmur"] }
+responses = ">=0.13.3"
+pandas = "==1.2.5"
+# commented for no current usescikit-learn = ">=0.24.2"
+# commented to resolve the low space issue on github actoins tensorflow = ">=2.4.0"
+dictdiffer = ">=0.8.1"
+pytest-instafail = ">=0.4.2"
+pytest-xdist = ">=2.2.1"
+pytest-split = ">=0.1.5"
+"pytest-xdist[psutil]" = ">=2.2.0"
+black = "==21.5b0"
+moto = ">=2.0.8"
+faker=">=8.5.1"
+openpyxl=">=3.0.7"
+Sphinx="==4.1.2"
+sphinx-autoapi="==1.8.4"
+sphinx-rtd-theme="==0.5.2"
+myst-parser="==0.15.1"
+
+[requires]
+python_version = "3.7"
+
+[pipenv]
+allow_prereleases = false
