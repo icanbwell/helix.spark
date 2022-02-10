@@ -14,7 +14,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.7-slim as python_packages
+FROM python:3.7 as python_packages
 
 RUN apt-get update && \
     apt-get install -y git && \
@@ -24,11 +24,20 @@ RUN apt-get update && \
 RUN apt update && \
     apt install -y build-essential
 
+RUN python --version && \
+    python -m pip install --upgrade --no-cache-dir pip && \
+    python -m pip install --no-cache-dir wheel && \
+    python -m pip install --no-cache-dir pre-commit && \
+    python -m pip install --no-cache-dir pipenv
+
+ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
 RUN pipenv sync --system  # This should not be needed because the line below covers system also
-RUN pipenv sync --dev --system
+RUN pipenv sync --dev --system --verbose
 
 RUN pip list -v
 
@@ -49,11 +58,11 @@ USER root
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # install system packages
-RUN /usr/bin/python3 --version && \
-    /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
-    /usr/bin/python3 -m pip install --no-cache-dir wheel && \
-    /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
-    /usr/bin/python3 -m pip install --no-cache-dir pipenv
+RUN python --version && \
+    python -m pip install --upgrade --no-cache-dir pip && \
+    python -m pip install --no-cache-dir wheel && \
+    python -m pip install --no-cache-dir pre-commit && \
+    python -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.pipelines
 ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
@@ -83,7 +92,7 @@ ENV AWS_REGION=us-east-1
 
 ENV HADOOP_CONF_DIR=/opt/spark/conf
 
-RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
+#RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
 RUN /opt/spark/bin/spark-submit --master local[*] test.py
 
