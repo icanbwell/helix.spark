@@ -36,8 +36,8 @@ ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
-RUN pipenv sync --system  # This should not be needed because the line below covers system also
-RUN pipenv sync --dev --system --verbose
+RUN pipenv sync --system --verbose # This should not be needed because the line below covers system also
+#RUN pipenv sync --dev --system --verbose
 
 RUN pip list -v
 
@@ -55,14 +55,12 @@ USER root
 #    curl https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar -o /opt/spark/jars/spark-token-provider-kafka-0-10_2.12-3.1.1.jar && \
 #    curl https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar -o /opt/spark/jars/commons-pool2-2.6.2.jar
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-
 # install system packages
-RUN python --version && \
-    python -m pip install --upgrade --no-cache-dir pip && \
-    python -m pip install --no-cache-dir wheel && \
-    python -m pip install --no-cache-dir pre-commit && \
-    python -m pip install --no-cache-dir pipenv
+RUN /usr/bin/python3 --version && \
+    /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
+    /usr/bin/python3 -m pip install --no-cache-dir wheel && \
+    /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
+    /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.pipelines
 ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
@@ -93,6 +91,8 @@ ENV AWS_REGION=us-east-1
 ENV HADOOP_CONF_DIR=/opt/spark/conf
 
 #RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 RUN /opt/spark/bin/spark-submit --master local[*] test.py
 
