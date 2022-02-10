@@ -4,8 +4,14 @@ build:
 
 build_all:
 	#docker image rm imranq2/spark-py:local || echo "no image"
-	docker buildx build --platform=linux/amd64 -t imranq2/spark-py:local .
-	#docker buildx build --platform=linux/arm64 -t imranq2/spark-py:local .
+#	docker buildx build --platform=linux/amd64 -t imranq2/spark-py:local .
+	docker buildx build --platform=linux/arm64 -t imranq2/spark-py:local .
+
+build_minimal:
+	#docker image rm imranq2/spark-py:local || echo "no image"
+#	docker buildx build --platform=linux/amd64 -t imranq2/spark-py:local .
+	docker buildx build --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/spark-py:minimal-local .
+#	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/spark-py:minimal-local .
 
 shell:
 	docker run -it imranq2/spark-py:local sh

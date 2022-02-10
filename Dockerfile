@@ -71,8 +71,11 @@ WORKDIR /helix.pipelines
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.7/site-packages/
+RUN mkdir -p /usr/local/lib/python3.7/site-packages/ && \
+    mkdir -p /usr/local/lib/python3.7/dist-packages
+
 COPY --from=python_packages /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
+#COPY --from=python_packages /usr/local/lib/python3.7/dist-packages/ /usr/local/lib/python3.7/dist-packages/
 
 RUN ls -halt /opt/spark/jars/
 
@@ -92,7 +95,7 @@ ENV HADOOP_CONF_DIR=/opt/spark/conf
 
 #RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 RUN /opt/spark/bin/spark-submit --master local[*] test.py
 

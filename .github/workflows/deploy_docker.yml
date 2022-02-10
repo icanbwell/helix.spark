@@ -49,18 +49,37 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: build docker java 15 images
-        run: |
-          docker buildx create --use
-          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java15-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=15-slim build
+#      - name: Build and push
+#        uses: docker/build-push-action@v2
+#        with:
+#          context: .
+#          file: minimal.Dockerfile
+#          platforms: linux/amd64,linux/arm64
+#          push: true
+#          tags: imranq2/spark-py:minimal-${{ steps.previoustag.outputs.tag }}
+#          cache-from: type=local,src=/tmp/.buildx-cache
+#          cache-to: type=local,dest=/tmp/.buildx-cache-new
+#      - name: build docker java 15 images
+#        run: |
+#          docker buildx create --use
+#          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java15-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=15-slim build
 #          docker tag imranq2/spark-py:java15-${{ steps.previoustag.outputs.tag }} imranq2/spark-py:java15-latest
-      - name: Build and push
+      - name: Build and push AMD64
         uses: docker/build-push-action@v2
         with:
           context: .
-          platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
           push: true
           tags: imranq2/spark-py:${{ steps.previoustag.outputs.tag }}
+          cache-from: type=local,src=/tmp/.buildx-cache
+          cache-to: type=local,dest=/tmp/.buildx-cache-new
+      - name: Build and push ARM64
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          platforms: linux/arm64
+          push: true
+          tags: imranq2/spark-py:arm64-${{ steps.previoustag.outputs.tag }}
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache-new
 #      - name: build main docker images
