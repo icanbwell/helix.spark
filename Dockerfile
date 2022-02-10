@@ -97,6 +97,7 @@ ENV HADOOP_CONF_DIR=/opt/spark/conf
 
 #RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
-RUN /opt/spark/bin/spark-submit --master local[*] test.py
-
 USER root
+
+#RUN /opt/spark/bin/spark-submit --master local[*] test.py
+
