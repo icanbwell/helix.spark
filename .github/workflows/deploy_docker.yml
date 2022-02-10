@@ -53,4 +53,4 @@ jobs:
           docker tag imranq2/spark-py:java15-${{ steps.previoustag.outputs.tag }} imranq2/spark-py:java15-latest
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java17-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17 -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
           docker tag imranq2/spark-py:java17-${{ steps.previoustag.outputs.tag }} imranq2/spark-py:java17-latest
-          docker buildx build --platform=linux/amd64,linux/arm64 -r imranq2 -t latest -t ${{ steps.previoustag.outputs.tag }} .
+          docker buildx build --platform=linux/amd64,linux/arm64 -t imranq2/spark-py:latest -t imranq2/spark-py:${{ steps.previoustag.outputs.tag }} .
