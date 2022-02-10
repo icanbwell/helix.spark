@@ -56,8 +56,6 @@ RUN ls -halt /opt/spark/jars/
 
 COPY ./test.py ./
 
-RUN /opt/spark/bin/spark-submit --master local[*] test.py
-
 # ENV SPARK_EXTRA_CLASSPATH
 
 ENV AWS_DEFAULT_REGION=us-east-1
@@ -68,5 +66,7 @@ ENV HADOOP_CONF_DIR=/opt/spark/conf
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
+
+RUN /opt/spark/bin/spark-submit --master local[*] test.py
 
 USER root
