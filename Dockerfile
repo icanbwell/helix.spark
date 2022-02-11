@@ -42,7 +42,7 @@ RUN pipenv sync --system --verbose # This should not be needed because the line 
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java15-3.0.28
+FROM imranq2/spark-py:java15-3.0.42
 USER root
 
 ## install AWS S3 library (this can be removed after testing the above mvn downloads are working correctluy)
