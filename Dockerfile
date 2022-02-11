@@ -37,7 +37,7 @@ COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
 RUN pipenv sync --system --verbose # This should not be needed because the line below covers system also
-#RUN pipenv sync --dev --system --verbose
+RUN pipenv sync --dev --system --verbose
 
 RUN pip list -v
 
