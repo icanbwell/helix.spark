@@ -103,5 +103,5 @@ RUN chmod a+x /opt/minimal_entrypoint.sh
 
 USER root
 
-#RUN /opt/spark/bin/spark-submit --master local[*] test.py
+RUN /opt/spark/bin/spark-submit --master local[*] test.py
 
