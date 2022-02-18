@@ -9,6 +9,7 @@ jobs:
   build_and_test:
     # The type of runner that the job will run on
     # uses https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh
+    # docker files are here: https://github.com/apache/spark/tree/master/resource-managers/kubernetes/docker/src/main/dockerfiles/spark
     # export ARCHS=--platform linux/arm/v7,linux/arm64/v8,linux/amd64
 
     runs-on: ubuntu-latest
