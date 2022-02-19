@@ -45,6 +45,10 @@ RUN pip list -v
 FROM imranq2/spark-py:java15-3.0.42
 USER root
 
+ARG TARGETPLATFORM
+ARG TARGETARCH
+ARG TARGETVARIANT
+
 ## install AWS S3 library (this can be removed after testing the above mvn downloads are working correctluy)
 #RUN apt-get install -y curl && \
 #    rm -f /opt/spark/jars/hadoop-aws-2.7.3.jar && \
@@ -103,5 +107,8 @@ RUN chmod a+x /opt/minimal_entrypoint.sh
 
 USER root
 
-RUN /opt/spark/bin/spark-submit --master local[*] test.py
+# https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 
+RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
+# this command below fails in Github Runner
+RUN if [ "$TARGETARCH" = "amd64" ] ; then /opt/spark/bin/spark-submit --master local[*] test.py; fi
