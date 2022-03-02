@@ -106,6 +106,7 @@ COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
 USER root
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 
