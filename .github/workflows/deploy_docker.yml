@@ -16,9 +16,17 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Set up Python 3.7
+        uses: actions/setup-python@v3
         with:
-          python-version: '3.7'
+          python-version: 3.7
+          cache: 'pipenv'
+          # stored in /home/runner/.local/share/virtualenvs
+      - name: create virtualenv folder
+        run: |
+          mkdir -p ~/.local      
+          mkdir -p ~/.local/share      
+          mkdir -p ~/.local/share/virtualenvs
       - uses: actions/setup-java@v1
         with:
           java-version: '15'
