@@ -1,6 +1,7 @@
 build:
 	docker image rm imranq2/helix.spark:local || echo "no image"
-	docker buildx build --platform=linux/amd64 --progress=plain -t imranq2/helix.spark:local .
+	docker build -t imranq2/helix.spark:local .
+#	docker buildx build --platform=linux/amd64 --progress=plain -t imranq2/helix.spark:local .
 
 build_all:
 	#docker image rm imranq2/helix.spark:local || echo "no image"
