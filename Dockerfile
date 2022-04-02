@@ -36,13 +36,13 @@ ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
-RUN pipenv sync --system --verbose # This should not be needed because the line below covers system also
-RUN pipenv sync --dev --system --verbose
+RUN pipenv lock --dev && \
+    pipenv sync --dev --system --verbose
 
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java15-3.1.2.3
+FROM imranq2/spark-py:java15-3.1.2.6
 USER root
 
 ARG TARGETPLATFORM
@@ -82,6 +82,7 @@ COPY --from=python_packages /usr/local/lib/python3.7/site-packages/ /usr/local/l
 #COPY --from=python_packages /usr/local/lib/python3.7/dist-packages/ /usr/local/lib/python3.7/dist-packages/
 # get the shell commands for these packages also
 COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
+COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
 
 RUN ls -halt /opt/spark/jars/
 
