@@ -71,8 +71,6 @@ RUN mkdir -p /usr/local/lib/python3.7/site-packages/ && \
 
 COPY --from=python_packages /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
 #COPY --from=python_packages /usr/local/lib/python3.7/dist-packages/ /usr/local/lib/python3.7/dist-packages/
-# get the shell commands for these packages also
-COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
 
 RUN ls -halt /opt/spark/jars/
 

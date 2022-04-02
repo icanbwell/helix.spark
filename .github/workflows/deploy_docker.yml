@@ -51,12 +51,12 @@ jobs:
           platforms: linux/amd64, linux/arm64
           push: true
           file: minimal.Dockerfile
-          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-slim
+          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-slim,imranq2/helix.spark:latest-slim
       - name: Build and push
         uses: docker/build-push-action@v2
         with:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}
+          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
 
