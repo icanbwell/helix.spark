@@ -23,7 +23,6 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: 3.7
-          cache: 'pipenv'
           # stored in /home/runner/.local/share/virtualenvs
       - name: create virtualenv folder
         run: |
