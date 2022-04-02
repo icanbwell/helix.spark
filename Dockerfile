@@ -42,7 +42,7 @@ RUN pipenv sync --dev --system --verbose
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java15-3.1.2.1
+FROM imranq2/spark:java15-3.1.2.3
 USER root
 
 ARG TARGETPLATFORM
