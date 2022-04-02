@@ -16,7 +16,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
+      - name: Get Previous tag
+        id: previoustag
+        uses: WyriHaximus/github-action-get-previous-tag@master
+      - uses: actions/setup-python@v3
         with:
           python-version: '3.7'
       - uses: actions/setup-java@v1
@@ -27,9 +30,6 @@ jobs:
           spark-version: '3.1.2' # Exact version
           hadoop-version: '3.2'
       - run: spark-submit --version
-      - name: Get Previous tag
-        id: previoustag
-        uses: WyriHaximus/github-action-get-previous-tag@master
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
