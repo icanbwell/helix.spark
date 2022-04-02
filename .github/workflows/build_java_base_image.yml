@@ -4,6 +4,11 @@ name: Build Java Base Image
 # events but only for the master branch
 on:
   workflow_dispatch:
+    inputs:
+      version:
+        type: string
+        required: true
+        description: "version to use in dockerhub e.g., 3.0.42"
 
 jobs:
   build_and_test:
@@ -49,7 +54,7 @@ jobs:
         run: |
           docker buildx create --use
           $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java15-${{ github.event.inputs.version }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=15-slim build
-#          docker tag imranq2/spark-py:java15-${{ steps.previoustag.outputs.tag }} imranq2/spark-py:java15-latest
+#          docker tag imranq2/spark-py:java15-${{ github.event.inputs.version }} imranq2/spark-py:java15-latest
       - name: build docker java 17 images
         run: |
           docker buildx create --use
@@ -57,8 +62,8 @@ jobs:
           curl https://raw.githubusercontent.com/apache/spark/master/resource-managers/kubernetes/docker/src/main/dockerfiles/spark/Dockerfile.java17 --output $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17
           ls -halt $SPARK_HOME/kubernetes/dockerfiles/spark
           cat $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17
-          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java17-${{ steps.previoustag.outputs.tag }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17 -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
-          docker tag imranq2/spark-py:java17-${{ steps.previoustag.outputs.tag }} imranq2/spark-py:java17-latest
+          $SPARK_HOME/bin/docker-image-tool.sh -r imranq2 -t java17-${{ github.event.inputs.version }} -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile.java17 -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-slim build
+          docker tag imranq2/spark-py:java17-${{ github.event.inputs.version }} imranq2/spark-py:java17-latest
         # This ugly bit is necessary if you don't want your cache to grow forever
         # till it hits GitHub's limit of 5GB.
         # Temp fix
