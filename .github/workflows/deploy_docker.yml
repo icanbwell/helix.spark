@@ -60,7 +60,7 @@ jobs:
           push: true
           file: pre-commit.Dockerfile
           tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-precommit,imranq2/helix.spark:latest-precommit
-      - name: Build and push
+      - name: Build and push main image
         uses: docker/build-push-action@v2
         with:
           context: .
