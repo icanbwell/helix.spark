@@ -1,4 +1,4 @@
-name: Deploy Docker Image
+name: Deploy Precommit Docker Image
 
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
@@ -44,19 +44,19 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-      - name: Build and push slim image
+      - name: Build and push precommit slim image
         uses: docker/build-push-action@v2
         with:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          file: minimal.Dockerfile
-          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-slim,imranq2/helix.spark:latest-slim
-      - name: Build and push main image
+          file: pre-commit-slim.Dockerfile
+          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-precommit-slim,imranq2/helix.spark:latest-precommit-slim
+      - name: Build and push precommit image
         uses: docker/build-push-action@v2
         with:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
-
+          file: pre-commit.Dockerfile
+          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-precommit,imranq2/helix.spark:latest-precommit
