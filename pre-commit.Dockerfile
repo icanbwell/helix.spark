@@ -5,8 +5,7 @@ RUN apt-get update && \
     pip install pipenv
 
 # Essential updates for build to succeed on arm64:
-RUN apt update && \
-    apt install -y build-essential
+RUN apt install -y build-essential
 
 COPY ${project_root}/Pipfile* ./
 
@@ -15,4 +14,5 @@ RUN pipenv lock --dev && \
 
 WORKDIR /sourcecode
 
+RUN apt-get clean
 
