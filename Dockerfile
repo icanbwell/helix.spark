@@ -36,6 +36,16 @@ ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
+#ENV PIP_ONLY_BINARY=:all:
+#ENV PIP_NO_BINARY=autoflake
+#ENV PIP_USE_WHEEL=1
+
+RUN pip debug --verbose
+
+#RUN export PIP_ONLY_BINARY=:all: && \
+#    export PIP_NO_BINARY="autoflake" && \
+#    PIP_NO_BINARY=autoflake pipenv lock --dev
+
 RUN pipenv lock --dev && \
     pipenv sync --dev --system --verbose
 

@@ -16,6 +16,8 @@ RUN mkdir /tmp/bsights-engine-spark \
 # Build stage for pip packages
 FROM python:3.7 as python_packages
 
+RUN pip debug --verbose
+
 RUN apt-get update && \
     apt-get install -y git && \
     pip install pipenv
