@@ -4,7 +4,8 @@ build_init:
 	docker buildx create --use
 
 build:
-	docker buildx build --platform=linux/amd64 --progress=plain -t imranq2/helix.spark:local .
+	#docker buildx build --platform=linux/amd64 --progress=plain -t imranq2/helix.spark:local .
+	docker build -t imranq2/helix.spark:local .
 
 build_all:
 	#docker image rm imranq2/helix.spark:local || echo "no image"
@@ -18,7 +19,10 @@ build_minimal:
 #	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
 shell:
-	docker run -it imranq2/helix.spark:local sh
+	docker-compose run --rm --name helix_spark_dev dev sh
+
+update:
+	docker-compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev --verbose"
 
 history-server:
 	docker run -v $PWD/spark-events:/tmp/spark-events -it imranq2/helix.spark:local sh

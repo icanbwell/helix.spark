@@ -1,0 +1,11 @@
+version: '3.5'
+services:
+  dev:
+    user: root
+    build:
+      dockerfile: Dockerfile
+      context: .
+    volumes:
+    - ./:/helix.pipelines/:delegated
+    container_name: helix_spark_dev
+    working_dir: /helix.pipelines
