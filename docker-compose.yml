@@ -6,6 +6,7 @@ services:
       dockerfile: Dockerfile
       context: .
     volumes:
-    - ./:/helix.pipelines/:delegated
+    - ./:/helix.pipelines/:rw
+    - ~/.local/share/virtualenvs:/root/.local/share/virtualenvs:rw
     container_name: helix_spark_dev
     working_dir: /helix.pipelines
