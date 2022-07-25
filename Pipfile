@@ -6,7 +6,7 @@ name = "pypi"
 [packages]
 wheel=">=0.37.1"
 protobuf="==3.20.*"
-#"sparkdataframecomparer" = "==1.0.5.a2"
+"sparkdataframecomparer" = "==1.0.5.a2"
 #sparkautomapper = "==1.0.16.a1"
 #"sparkfhirschemas" = "==1.0.7.a1"
 #sparkpipelineframework = "==1.0.25.a1"

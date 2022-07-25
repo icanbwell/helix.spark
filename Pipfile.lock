@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "8e2f60a8700330b3cde174610f79b8d84fbabbe7bc3e9f958c8c865a348f677b"
+            "sha256": "9242917dc035c376efc7b0b5470480951a4f3f57f581ee5822d249bc9bf771bc"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -454,6 +454,12 @@
             ],
             "version": "==2.0.2"
         },
+        "logger": {
+            "hashes": [
+                "sha256:4ecac57133c6376fa215f0fe6b4dc4d60e4d1ad8be005cab4e8a702df682f8b3"
+            ],
+            "version": "==1.4"
+        },
         "lxml-stubs": {
             "hashes": [
                 "sha256:184877b42127256abc2b932ba8bd0ab5ea80bd0b0fee618d16daa40e0b71abee",
@@ -789,6 +795,14 @@
             ],
             "index": "pypi",
             "version": "==6.0.0"
+        },
+        "sparkdataframecomparer": {
+            "hashes": [
+                "sha256:2e05881dfaf079e312c8370b76d4926d33a7ddcf8cdd86767d906935c29daeb9",
+                "sha256:aec733fb84a9660ef8979cf61141759404f9412d88b618e9ab9d2e0e86d72c85"
+            ],
+            "index": "pypi",
+            "version": "==1.0.5.a2"
         },
         "structlog": {
             "hashes": [
