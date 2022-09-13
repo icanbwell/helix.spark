@@ -1,0 +1,12 @@
+version: '3.5'
+services:
+  dev:
+    user: root
+    build:
+      dockerfile: minimal.Dockerfile
+      context: .
+    volumes:
+    - ./:/helix.pipelines/:rw
+    - ~/.local/share/virtualenvs:/root/.local/share/virtualenvs:rw
+    container_name: helix_spark_dev
+    working_dir: /helix.pipelines
