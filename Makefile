@@ -22,7 +22,7 @@ shell:
 	docker-compose run --rm --name helix_spark_dev dev sh
 
 update:
-	docker-compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev"
+	docker-compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev --verbose"
 
 history-server:
 	docker run -v $PWD/spark-events:/tmp/spark-events -it imranq2/helix.spark:local sh
