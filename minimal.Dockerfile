@@ -84,9 +84,6 @@ RUN mkdir -p /usr/local/lib/python${python_version}/site-packages/ && \
 
 COPY --from=python_packages /usr/local/lib/python${python_version}/site-packages/ /usr/local/lib/python${python_version}/site-packages/
 COPY --from=python_packages /usr/local/lib/python${python_version}/dist-packages/ /usr/local/lib/python${python_version}/dist-packages/
-# get the shell commands for these packages also
-COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
-COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
 
 RUN ls -halt /opt/spark/jars/
 
@@ -115,6 +112,9 @@ RUN chmod a+x /opt/minimal_entrypoint.sh
 USER root
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python${python_version} 1
 RUN update-alternatives --install /usr/bin/python3 python /usr/bin/python${python_version} 1
+
+## Specifies where Spark will look for the python process
+ENV PYSPARK_PYTHON=/usr/bin/python3
 
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 

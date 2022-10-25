@@ -131,6 +131,9 @@ USER root
 RUN update-alternatives --install /usr/bin/python python /usr/bin/python${python_version} 1
 RUN update-alternatives --install /usr/bin/python3 python /usr/bin/python${python_version} 1
 
+## Specifies where Spark will look for the python process
+ENV PYSPARK_PYTHON=/usr/bin/python3
+
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 
 RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
