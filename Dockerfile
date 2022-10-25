@@ -1,5 +1,5 @@
 # Build stage for maven packages
-FROM maven:3.8.1-openjdk-15-slim AS build
+FROM maven:3.8.6-eclipse-temurin-17-focal AS build
 # get dependencies for bsights-engine-spark
 RUN mkdir /tmp/bsights-engine-spark \
     && cd /tmp/bsights-engine-spark \
@@ -11,10 +11,11 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.amazonaws:aws-java-sdk-bundle:1.12.128 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.2.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-core_2.12:2.1.0 \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.7 as python_packages
+FROM python:3.9 as python_packages
 
 RUN apt-get update && \
     apt-get install -y git && \
@@ -52,7 +53,7 @@ RUN pipenv lock --dev && \
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java15-3.3.0.2
+FROM imranq2/spark-py:java17-3.3.0.9
 USER root
 
 ARG TARGETPLATFORM
@@ -85,10 +86,10 @@ WORKDIR /helix.pipelines
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.7/site-packages/ && \
-    mkdir -p /usr/local/lib/python3.7/dist-packages
+RUN mkdir -p /usr/local/lib/python3.9/site-packages/ && \
+    mkdir -p /usr/local/lib/python3.9/dist-packages
 
-COPY --from=python_packages /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
+COPY --from=python_packages /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
 #COPY --from=python_packages /usr/local/lib/python3.7/dist-packages/ /usr/local/lib/python3.7/dist-packages/
 # get the shell commands for these packages also
 COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
