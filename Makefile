@@ -28,7 +28,7 @@ shell:build
 	docker run --rm -it imranq2/helix.spark:local sh
 
 shell_databricks:build_databricks
-	docker run --rm -it imranq2/helix.spark:databricks-local  sh
+	docker run --rm  --user root -it imranq2/helix.spark:databricks-local  sh
 
 
 update:
