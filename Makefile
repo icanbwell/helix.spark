@@ -18,8 +18,18 @@ build_minimal:
 	docker buildx build --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 #	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
-shell:
-	docker-compose run --rm --name helix_spark_dev dev sh
+build_databricks:
+	#docker image rm imranq2/helix.spark:local || echo "no image"
+#	docker buildx build --platform=linux/amd64 -t imranq2/helix.spark:local .
+	docker build -f databricks.Dockerfile -t imranq2/helix.spark:databricks-local .
+#	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
+
+shell:build
+	docker run --rm -it imranq2/helix.spark:local sh
+
+shell_databricks:build_databricks
+	docker run --rm -it imranq2/helix.spark:databricks-local  sh
+
 
 update:
 	docker-compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev --verbose"
