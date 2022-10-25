@@ -53,7 +53,7 @@ RUN pipenv lock --dev && \
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java17-3.3.0.9
+FROM imranq2/spark:java17-3.3.0.9
 USER root
 
 ARG TARGETPLATFORM
@@ -70,15 +70,33 @@ ARG TARGETVARIANT
 #    curl https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar -o /opt/spark/jars/spark-token-provider-kafka-0-10_2.12-3.1.1.jar && \
 #    curl https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar -o /opt/spark/jars/commons-pool2-2.6.2.jar
 
+# These are the versions compatible for DBR 11.x
+ARG python_version="3.9"
+ARG pip_version="21.2.4"
+ARG setuptools_version="58.0.4"
+ARG wheel_version="0.37.0"
+ARG virtualenv_version="20.8.0"
+
+# Installs python 3.8 and virtualenv for Spark and Notebooks
+RUN apt-get update \
+  && apt-get install curl software-properties-common -y \
+  && add-apt-repository -y ppa:deadsnakes/ppa \
+  && apt-get remove -y 'python3.*' \
+  && apt-get install -y python${python_version} python${python_version}-distutils \
+  && curl https://bootstrap.pypa.io/get-pip.py -o get-pip.py \
+  && /usr/bin/python${python_version} get-pip.py pip==${pip_version} setuptools==${setuptools_version} wheel==${wheel_version} \
+  && rm get-pip.py
+
 # install system packages
-RUN /usr/bin/python3 --version && \
-    /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
-    /usr/bin/python3 -m pip install --no-cache-dir wheel && \
-    /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
-    /usr/bin/python3 -m pip install --no-cache-dir pipenv
+RUN /usr/bin/python${python_version} --version && \
+    /usr/bin/python${python_version} -m pip install --upgrade --no-cache-dir pip && \
+    /usr/bin/python${python_version} -m pip install --no-cache-dir wheel && \
+    /usr/bin/python${python_version} -m pip install --no-cache-dir pre-commit && \
+    /usr/bin/python${python_version} -m pip install --no-cache-dir pipenv && \
+    /usr/bin/python${python_version} -m pip install --no-cache-dir pyspark==3.3.0
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+ENV PYTHONPATH=/opt/project:${PYTHONPATH}
 ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
 
 COPY Pipfile* /helix.pipelines/
@@ -86,11 +104,11 @@ WORKDIR /helix.pipelines
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.9/site-packages/ && \
-    mkdir -p /usr/local/lib/python3.9/dist-packages
+RUN mkdir -p /usr/local/lib/python${python_version}/site-packages/ && \
+    mkdir -p /usr/local/lib/python${python_version}/dist-packages
 
-COPY --from=python_packages /usr/local/lib/python3.9/site-packages/ /usr/local/lib/python3.9/site-packages/
-#COPY --from=python_packages /usr/local/lib/python3.7/dist-packages/ /usr/local/lib/python3.7/dist-packages/
+COPY --from=python_packages /usr/local/lib/python${python_version}/site-packages/ /usr/local/lib/python${python_version}/site-packages/
+COPY --from=python_packages /usr/local/lib/python${python_version}/dist-packages/ /usr/local/lib/python${python_version}/dist-packages/
 # get the shell commands for these packages also
 COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
 COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
@@ -113,14 +131,15 @@ ENV HADOOP_CONF_DIR=/opt/spark/conf
 
 #RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
 
-#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.9 1
 
 COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
 
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
 USER root
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+RUN update-alternatives --install /usr/bin/python python /usr/bin/python${python_version} 1
+RUN update-alternatives --install /usr/bin/python3 python /usr/bin/python${python_version} 1
 
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 
