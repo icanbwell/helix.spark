@@ -14,8 +14,8 @@ build_all:
 
 build_minimal:
 	#docker image rm imranq2/helix.spark:local || echo "no image"
-#	docker buildx build --platform=linux/amd64 -t imranq2/helix.spark:local .
-	docker build -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
+	docker buildx build --platform=linux/amd64 -t imranq2/helix.spark:local .
+	#docker build -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 #	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
 build_databricks:
