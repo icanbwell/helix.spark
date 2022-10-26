@@ -3,7 +3,7 @@ services:
   dev:
     user: root
     build:
-      dockerfile: minimal.Dockerfile
+      dockerfile: Dockerfile
       context: .
     volumes:
     - ./:/helix.pipelines/:rw
