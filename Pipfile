@@ -24,7 +24,7 @@ smart-open = {extras = ["s3"], version = ">=6.1.0"}
 pymongo="==4.2.0"
 pyathena = ">=2.14.0"
 fastjsonschema= ">=2.16.1"
-"helix.fhir.client.sdk" = "==1.0.28"
+"helix.fhir.client.sdk" = "==1.0.29"
 opensearch-py= "==1.1.0"
 "helix.catalog-sdk" = "==0.2.9"
 types-dataclasses=">=0.6.4"
