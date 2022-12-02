@@ -56,7 +56,7 @@ RUN pipenv lock --dev && \
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java15-3.3.0.2
+FROM imranq2/spark-py:java15-3.3.0.5
 USER root
 
 ARG TARGETPLATFORM
