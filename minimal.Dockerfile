@@ -38,7 +38,7 @@ ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark:java17-3.3.0.9
+FROM imranq2/spark:java17-3.3.0.10
 USER root
 
 ARG TARGETPLATFORM
