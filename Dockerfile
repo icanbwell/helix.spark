@@ -3,10 +3,8 @@ FROM maven:3.8.1-openjdk-15-slim AS build
 # get dependencies for bsights-engine-spark
 RUN mkdir /tmp/bsights-engine-spark \
     && cd /tmp/bsights-engine-spark \
-#    && curl https://raw.githubusercontent.com/icanbwell/bsights-engine-spark/main/pom.xml -o pom.xml \
     && mkdir /tmp/spark \
     && mkdir /tmp/spark/jars \
-#    && mvn dependency:copy-dependencies -DoutputDirectory=/tmp/spark/jars -Dhttps.protocols=TLSv1.2 \
     && ls /tmp/spark/jars \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=mysql:mysql-connector-java:8.0.24 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0 \
@@ -41,15 +39,8 @@ ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
-#ENV PIP_ONLY_BINARY=:all:
-#ENV PIP_NO_BINARY=autoflake
-#ENV PIP_USE_WHEEL=1
-
 RUN pip debug --verbose
 
-#RUN export PIP_ONLY_BINARY=:all: && \
-#    export PIP_NO_BINARY="autoflake" && \
-#    PIP_NO_BINARY=autoflake pipenv lock --dev
 
 RUN pipenv lock --dev && \
     pipenv sync --dev --system --verbose
@@ -80,8 +71,7 @@ WORKDIR /helix.pipelines
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.8/site-packages/ && \
-    mkdir -p /usr/local/lib/python3.8/dist-packages
+RUN mkdir -p /usr/local/lib/python3.8/site-packages/
 
 COPY --from=python_packages /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
 
@@ -91,23 +81,16 @@ COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
 
 RUN ls -halt /opt/spark/jars/
 
-#COPY ./jars/* /opt/spark/jars/
 COPY ./conf/* /opt/spark/conf/
 
 RUN ls -halt /opt/spark/jars/
 
 COPY ./test.py ./
 
-# ENV SPARK_EXTRA_CLASSPATH
-
 ENV AWS_DEFAULT_REGION=us-east-1
 ENV AWS_REGION=us-east-1
 
 ENV HADOOP_CONF_DIR=/opt/spark/conf
-
-#RUN apt-get clean autoclean && apt-get autoremove --yes && rm -rf /var/lib/{apt,dpkg,cache,log}/
-
-#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
 
