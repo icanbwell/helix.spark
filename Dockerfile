@@ -48,59 +48,59 @@ RUN pipenv lock --dev && \
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java15-3.3.0.5
-USER root
-
-ARG TARGETPLATFORM
-ARG TARGETARCH
-ARG TARGETVARIANT
-
-# install system packages
-RUN /usr/bin/python3 --version && \
-    /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
-    /usr/bin/python3 -m pip install --no-cache-dir wheel && \
-    /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
-    /usr/bin/python3 -m pip install --no-cache-dir pipenv
-
-ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
-ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
-
-COPY Pipfile* /helix.pipelines/
-WORKDIR /helix.pipelines
-
-COPY --from=build /tmp/spark/jars /opt/spark/jars
-
-RUN mkdir -p /usr/local/lib/python3.8/site-packages/
-
-COPY --from=python_packages /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
-
-# get the shell commands for these packages also
-COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
-COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
-
-RUN ls -halt /opt/spark/jars/
-
-COPY ./conf/* /opt/spark/conf/
-
-RUN ls -halt /opt/spark/jars/
-
-COPY ./test.py ./
-
-ENV AWS_DEFAULT_REGION=us-east-1
-ENV AWS_REGION=us-east-1
-
-ENV HADOOP_CONF_DIR=/opt/spark/conf
-
-COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
-
-RUN chmod a+x /opt/minimal_entrypoint.sh
-
-USER root
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
-
-# https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
-
-RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
-# this command below fails in Github Runner
-RUN if [ "$TARGETARCH" = "amd64" ] ; then /opt/spark/bin/spark-submit --master local[*] test.py; fi
+#FROM imranq2/spark-py:java15-3.3.0.5
+#USER root
+#
+#ARG TARGETPLATFORM
+#ARG TARGETARCH
+#ARG TARGETVARIANT
+#
+## install system packages
+#RUN /usr/bin/python3 --version && \
+#    /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
+#    /usr/bin/python3 -m pip install --no-cache-dir wheel && \
+#    /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
+#    /usr/bin/python3 -m pip install --no-cache-dir pipenv
+#
+#ENV PYTHONPATH=/helix.pipelines
+#ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+#ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
+#
+#COPY Pipfile* /helix.pipelines/
+#WORKDIR /helix.pipelines
+#
+#COPY --from=build /tmp/spark/jars /opt/spark/jars
+#
+#RUN mkdir -p /usr/local/lib/python3.8/site-packages/
+#
+#COPY --from=python_packages /usr/local/lib/python3.8/site-packages/ /usr/local/lib/python3.8/site-packages/
+#
+## get the shell commands for these packages also
+#COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
+#COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
+#
+#RUN ls -halt /opt/spark/jars/
+#
+#COPY ./conf/* /opt/spark/conf/
+#
+#RUN ls -halt /opt/spark/jars/
+#
+#COPY ./test.py ./
+#
+#ENV AWS_DEFAULT_REGION=us-east-1
+#ENV AWS_REGION=us-east-1
+#
+#ENV HADOOP_CONF_DIR=/opt/spark/conf
+#
+#COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
+#
+#RUN chmod a+x /opt/minimal_entrypoint.sh
+#
+#USER root
+#RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+#
+## https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+#
+#RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
+## this command below fails in Github Runner
+#RUN if [ "$TARGETARCH" = "amd64" ] ; then /opt/spark/bin/spark-submit --master local[*] test.py; fi
