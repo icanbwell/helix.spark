@@ -13,7 +13,7 @@ env:
 
 
 jobs:
-  build_and_deploy_to_docker_hub:
+  build_and_deploy_to_ecr:
     # The type of runner that the job will run on
     # uses https://github.com/apache/spark/blob/master/bin/docker-image-tool.sh
     # docker files are here: https://github.com/apache/spark/tree/master/resource-managers/kubernetes/docker/src/main/dockerfiles/spark
