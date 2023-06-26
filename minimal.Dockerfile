@@ -18,7 +18,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.7 as python_packages
+FROM python:3.10 as python_packages
 
 RUN pip debug --verbose
 
@@ -72,11 +72,11 @@ ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.7/site-packages/ && \
-    mkdir -p /usr/local/lib/python3.7/dist-packages
+RUN mkdir -p /usr/local/lib/python3.10/site-packages/ && \
+    mkdir -p /usr/local/lib/python3.10/dist-packages
 
-COPY --from=python_packages /usr/local/lib/python3.7/site-packages/ /usr/local/lib/python3.7/site-packages/
-#COPY --from=python_packages /usr/local/lib/python3.7/dist-packages/ /usr/local/lib/python3.7/dist-packages/
+COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
+#COPY --from=python_packages /usr/local/lib/python3.10/dist-packages/ /usr/local/lib/python3.10/dist-packages/
 
 RUN ls -halt /opt/spark/jars/
 
