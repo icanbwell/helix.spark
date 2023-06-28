@@ -48,8 +48,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}      
       - name: check disk space
         run: df -h
-      - name: check buildx disk space 
-        run: docker buildx du
+      - name: check docker disk space 
+        run: docker system df
 #       - name: Build and push main image
 #         uses: docker/build-push-action@v2
 #         with:
