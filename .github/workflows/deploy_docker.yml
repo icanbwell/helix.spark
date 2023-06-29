@@ -56,5 +56,6 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
+#           tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
+          tags: imranq2/helix.spark:testing
 
