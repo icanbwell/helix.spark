@@ -47,7 +47,7 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}      
       - name: check disk space
-        run: df -h
+        run: df -h /tmp
       - name: check docker disk space 
         run: docker system df
       - name: Build and push main image
