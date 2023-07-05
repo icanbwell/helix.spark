@@ -39,7 +39,7 @@ ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
-RUN pip debug --verbose
+# RUN pip debug --verbose
 
 
 RUN pipenv lock --dev && \
