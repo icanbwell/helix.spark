@@ -48,14 +48,17 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}      
       - name: check disk space
         run: df -h /tmp
-      - name: check docker disk space 
+      - name: check docker disk space 1 
+        run: docker system df
+      - name: clean up docker images
+        run: docker image prune -a -f
+      - name: check docker disk space 2
         run: docker system df
       - name: Build and push main image
         uses: docker/build-push-action@v4
         with:
           context: .
-#           platforms: linux/amd64, linux/arm64
-          platforms: linux/arm64
+          platforms: linux/amd64, linux/arm64         
           push: true
 #           tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
           tags: imranq2/helix.spark:testing
