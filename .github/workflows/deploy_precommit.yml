@@ -31,7 +31,8 @@ jobs:
           mkdir -p ~/.local/share/virtualenvs
       - uses: actions/setup-java@v1
         with:
-          java-version: '15'
+          distribution: 'temurin' # See 'Supported distributions' for available options
+          java-version: '17'
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
         with:
