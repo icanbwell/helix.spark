@@ -3,9 +3,8 @@ name: Deploy Docker Image
 # Controls when the action will run. Triggers the workflow on push or pull request
 # events but only for the master branch
 on:
-#   release:
-#     types: [created]
-  workflow_dispatch:
+  release:
+    types: [created]
   
 jobs:
   build_and_test:
