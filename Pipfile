@@ -35,7 +35,6 @@ spark-nlp = ">=4.2.2"
 ddtrace = ">=1.8.0"
 rapidfuzz="==2.13.7"
 "helix.personmatching" = "==1.0.19"  # for matching persons
-tensorflow = ">=2.11.0" # wheels are not available for Mac M1 for older ones
 nameparser = ">=1.1.2"
 usaddress-scourgify=">=0.2.0" # for normalizing addresses
 
