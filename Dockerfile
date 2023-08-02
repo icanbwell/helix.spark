@@ -41,12 +41,9 @@ COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
 
 # RUN pip debug --verbose
+RUN pipenv sync --system --extra-pip-args="--prefer-binary"
 
-
-RUN pipenv lock --dev && \
-    pipenv sync --dev --system --verbose
-
-RUN pip list -v
+#RUN pip list -v
 
 # Run stage
 FROM imranq2/spark-py:java17-3.3.0.16
@@ -77,8 +74,8 @@ RUN mkdir -p /usr/local/lib/python3.10/site-packages/
 COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
 
 # get the shell commands for these packages also
-COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
-COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
+#COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
+#COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
 
 RUN ls -halt /opt/spark/jars/
 
