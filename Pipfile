@@ -4,31 +4,7 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-wheel=">=0.40.0"
-protobuf="*"
-py4j = "==0.10.9.5" # https://spark.apache.org/docs/latest/api/python/getting_started/install.html#dependencies
-pyspark="==3.3.0"  # should match the version of spark we use for testing
-delta-spark="==2.3.0"
-requests = ">=2.28.2"
-furl = ">=2.1.3"
-structlog = ">=22.1.0"
-boto3 = "==1.26.76"
-virtualenv = ">=20.20.0"
-"helix.events.sdk" = "==0.1.1"
-smart-open = {extras = ["s3"], version = ">=6.3.0"}
-pymongo=">=4.2.0"
-pyathena = ">=2.14.0"
-fastjsonschema= ">=2.16.2"
-"helix.fhir.client.sdk" = "==1.0.38"
-"helix.catalog-sdk" = "==0.2.9"
-lxml-stubs = ">=0.3.1"
-bounded-pool-executor = ">=0.0.3"
-better-exceptions = ">=0.3.3"
-ddtrace = ">=1.8.0"
-rapidfuzz="==2.13.7"
-"helix.personmatching" = "==1.0.19"  # for matching persons
-nameparser = ">=1.1.2"
-usaddress-scourgify=">=0.2.0" # for normalizing addresses
+pandas="==1.2.5"
 
 [requires]
 python_version = "3.10"
