@@ -60,6 +60,8 @@ ARG TARGETVARIANT
 #    curl https://repo1.maven.org/maven2/org/apache/spark/spark-token-provider-kafka-0-10_2.12/3.1.1/spark-token-provider-kafka-0-10_2.12-3.1.1.jar -o /opt/spark/jars/spark-token-provider-kafka-0-10_2.12-3.1.1.jar && \
 #    curl https://repo1.maven.org/maven2/org/apache/commons/commons-pool2/2.6.2/commons-pool2-2.6.2.jar -o /opt/spark/jars/commons-pool2-2.6.2.jar
 
+RUN apt-get update
+
 # install system packages
 RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
