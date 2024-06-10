@@ -102,6 +102,7 @@ ENV HADOOP_CONF_DIR=/opt/spark/conf
 #RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
+COPY pom.xml /opt/pom.xml
 
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
