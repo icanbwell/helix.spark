@@ -1,8 +1,10 @@
 # Build stage for maven packages
 FROM maven:3.8.1-openjdk-15-slim AS build
+
+COPY pom.xml /tmp/bsights-engine-spark/
+
 # get dependencies for bsights-engine-spark
-RUN mkdir /tmp/bsights-engine-spark \
-    && cd /tmp/bsights-engine-spark \
+RUN cd /tmp/bsights-engine-spark \
     && mkdir /tmp/spark \
     && mkdir /tmp/spark/jars \
     && ls /tmp/spark/jars \
@@ -15,6 +17,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.2.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-hadoop-cloud_2.12:3.3.1 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.databricks:spark-xml_2.12:0.15.0 \
+    && mvn dependency:resolve-plugins \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
