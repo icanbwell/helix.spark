@@ -91,7 +91,6 @@ ENV AWS_REGION=us-east-1
 ENV HADOOP_CONF_DIR=/opt/spark/conf
 
 COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
-COPY pom.xml /opt/pom.xml
 
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
@@ -102,4 +101,8 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
 # this command below fails in Github Runner
-RUN if [ "$TARGETARCH" = "amd64" ] ; then /opt/spark/bin/spark-submit --master local[*] test.py; fi
+RUN if [ "$TARGETARCH" = "amd64" ] ;  \
+        then /opt/spark/bin/spark-submit  \
+        --conf "spark.jars=/opt/spark/jars/*" \
+        --master local[*] test.py;  \
+    fi
