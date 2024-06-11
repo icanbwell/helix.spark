@@ -1,8 +1,10 @@
 # Build stage for maven packages
 FROM maven:3.8.1-openjdk-15-slim AS build
+
+COPY pom.xml /tmp/bsights-engine-spark/
+
 # get dependencies for bsights-engine-spark
-RUN mkdir /tmp/bsights-engine-spark \
-    && cd /tmp/bsights-engine-spark \
+RUN cd /tmp/bsights-engine-spark \
     && mkdir /tmp/spark \
     && mkdir /tmp/spark/jars \
     && ls /tmp/spark/jars \
@@ -15,6 +17,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.2.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-hadoop-cloud_2.12:3.3.1 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.databricks:spark-xml_2.12:0.15.0 \
+    && mvn dependency:resolve-plugins \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
@@ -91,7 +94,6 @@ ENV AWS_REGION=us-east-1
 ENV HADOOP_CONF_DIR=/opt/spark/conf
 
 COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
-COPY pom.xml /opt/pom.xml
 
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
@@ -102,4 +104,8 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
 # this command below fails in Github Runner
-RUN if [ "$TARGETARCH" = "amd64" ] ; then /opt/spark/bin/spark-submit --master local[*] test.py; fi
+RUN if [ "$TARGETARCH" = "amd64" ] ;  \
+        then /opt/spark/bin/spark-submit  \
+        --conf "spark.jars=/opt/spark/jars/*" \
+        --master local[*] test.py;  \
+    fi
