@@ -19,7 +19,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.10 as python_packages
+FROM python:3.10 AS python_packages
 
 RUN pip debug --verbose
 
@@ -38,7 +38,7 @@ RUN python --version && \
     python -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 
 RUN pip list -v
 
@@ -70,7 +70,7 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
