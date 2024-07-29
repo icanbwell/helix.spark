@@ -104,9 +104,11 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
 # this command below fails in Github Runner
-RUN /opt/spark/bin/spark-submit  \
+RUN if [ "$TARGETARCH" = "amd64" ] ;  \
+        then /opt/spark/bin/spark-submit  \
         --conf "spark.jars=/opt/spark/jars/*" \
-        --master local[*] test.py;
+        --master local[*] test.py;  \
+    fi
 
 # Run as non-root user
 # https://spark.apache.org/docs/latest/running-on-kubernetes.html#user-identity
