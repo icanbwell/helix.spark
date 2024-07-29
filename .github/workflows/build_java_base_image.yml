@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 #  release:
 #    types: [created
-    
+
 env:
   IMAGE_NAME: helix-spark-py
   REPOSITORY_URL: 400686897767.dkr.ecr.us-east-1.amazonaws.com
@@ -53,7 +53,7 @@ jobs:
 #        with:
 #          username: ${{ secrets.DOCKERHUB_USERNAME }}
 #          password: ${{ secrets.DOCKERHUB_TOKEN }}
-      
+
       - name: create buildx context
         run: |
           docker buildx create --use
@@ -86,5 +86,5 @@ jobs:
         run: |
           curl https://raw.githubusercontent.com/apache/spark/master/resource-managers/kubernetes/docker/src/main/dockerfiles/spark/Dockerfile --output $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile
           ls -halt $SPARK_HOME/kubernetes/dockerfiles/spark
-          $SPARK_HOME/bin/docker-image-tool.sh -r $REPOSITORY_URL -t java17-1.0.0 -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-jre-jammy build
+          $SPARK_HOME/bin/docker-image-tool.sh -r $REPOSITORY_URL -t java17-1.0.0 -X -f $SPARK_HOME/kubernetes/dockerfiles/spark/Dockerfile -p $SPARK_HOME/kubernetes/dockerfiles/spark/bindings/python/Dockerfile -b java_image_tag=17-jre build
           docker push $REPOSITORY_URL/$IMAGE_NAME:java17-1.0.0 $REPOSITORY_URL/$IMAGE_NAME:java17-latest
