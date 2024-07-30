@@ -12,14 +12,17 @@ build_all:
 	docker buildx build --platform=linux/amd64 -t imranq2/helix.spark:local .
 	#docker buildx build --platform=linux/arm64 -t imranq2/helix.spark:local .
 
-build_minimal:
-	#docker image rm imranq2/helix.spark:local || echo "no image"
+build-minimal:
+	docker image rm imranq2/helix.spark:minimal-local || echo "no image"
 #	docker buildx build --platform=linux/amd64 -t imranq2/helix.spark:local .
 	docker buildx build --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 #	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
 shell:
 	docker-compose run --rm --name helix_spark_dev dev sh
+
+shell-minimal:
+	docker run -it imranq2/helix.spark:minimal-local /bin/sh
 
 update:
 	docker-compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev --verbose"
@@ -36,4 +39,3 @@ history-server:
 up:
 	docker build -t imranq2/helix.spark:local . && \
 	docker run --name spark_python --rm imranq2/helix.spark:local
-

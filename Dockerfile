@@ -21,7 +21,7 @@ RUN cd /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.10 AS python_packages
+FROM python:3.10-slim AS python_packages
 
 RUN apt-get update && \
     apt-get install -y git && \

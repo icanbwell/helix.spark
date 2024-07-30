@@ -19,7 +19,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.10 AS python_packages
+FROM python:3.10-slim AS python_packages
 
 RUN pip debug --verbose
 
@@ -34,8 +34,8 @@ RUN apt update && \
 RUN python --version && \
     python -m pip install --upgrade --no-cache-dir pip && \
     python -m pip install --no-cache-dir wheel && \
-    python -m pip install --no-cache-dir pre-commit && \
-    python -m pip install --no-cache-dir pipenv
+    python -m pip install --no-cache-dir pipenv && \
+    python -m pip install setuptools>=72.1.0 packaging>=24.1
 
 ENV PYTHONPATH=/helix.pipelines
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
@@ -78,8 +78,10 @@ COPY --from=build /tmp/spark/jars /opt/spark/jars
 RUN mkdir -p /usr/local/lib/python3.10/site-packages/ && \
     mkdir -p /usr/local/lib/python3.10/dist-packages
 
-COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
-#COPY --from=python_packages /usr/local/lib/python3.10/dist-packages/ /usr/local/lib/python3.10/dist-packages/
+#COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
+# in debian, the python packages are installed in dist-packages
+# https://stackoverflow.com/questions/9387928/whats-the-difference-between-dist-packages-and-site-packages
+COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/dist-packages/
 
 RUN ls -halt /opt/spark/jars/
 
