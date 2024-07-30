@@ -21,7 +21,7 @@ RUN cd /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.10 as python_packages
+FROM python:3.10 AS python_packages
 
 RUN apt-get update && \
     apt-get install -y git && \
@@ -38,7 +38,7 @@ RUN python --version && \
     python -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 
 COPY Pipfile* /helix.pipelines/
 WORKDIR /helix.pipelines
@@ -64,7 +64,7 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH "/opt/project:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
 
 COPY Pipfile* /helix.pipelines/
@@ -109,3 +109,7 @@ RUN if [ "$TARGETARCH" = "amd64" ] ;  \
         --conf "spark.jars=/opt/spark/jars/*" \
         --master local[*] test.py;  \
     fi
+
+# Run as non-root user
+# https://spark.apache.org/docs/latest/running-on-kubernetes.html#user-identity
+USER 185

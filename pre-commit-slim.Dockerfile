@@ -10,3 +10,5 @@ RUN apt install -y build-essential
 WORKDIR /sourcecode
 
 RUN apt-get clean
+
+CMD ["pre-commit", "run", "--all-files"]

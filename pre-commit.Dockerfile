@@ -7,7 +7,7 @@ RUN apt-get update && \
 # Essential updates for build to succeed on arm64:
 RUN apt install -y build-essential
 
-COPY ${project_root}/Pipfile* ./
+COPY Pipfile* ./
 
 RUN pipenv lock --dev && \
     pipenv sync --dev --system --verbose
@@ -16,3 +16,4 @@ WORKDIR /sourcecode
 
 RUN apt-get clean
 
+CMD ["pre-commit", "run", "--all-files"]
