@@ -6,6 +6,7 @@ RUN apt-get update && \
 
 # Essential updates for build to succeed on arm64:
 RUN apt install -y build-essential
+RUN pip install --upgrade setuptools
 
 COPY Pipfile* ./
 
