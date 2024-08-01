@@ -19,10 +19,10 @@ jobs:
       - name: Get Previous tag
         id: previoustag
         uses: WyriHaximus/github-action-get-previous-tag@master
-      - name: Set up Python 3.10
+      - name: Set up Python 3.12
         uses: actions/setup-python@v3
         with:
-          python-version: '3.10'
+          python-version: '3.12'
           # stored in /home/runner/.local/share/virtualenvs
       - name: create virtualenv folder
         run: |
@@ -51,4 +51,3 @@ jobs:
           platforms: linux/amd64, linux/arm64
           push: true
           tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
-
