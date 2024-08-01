@@ -111,10 +111,10 @@ RUN chmod a+x /opt/minimal_entrypoint.sh
 USER root
 # install python 3.12 - it's not available in normal ubuntu repositories
 # https://github.com/deadsnakes/issues/issues/53
-RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776
-RUN echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu/ jammy main" | tee /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-lunar.list
-RUN apt-get update && apt-get install -y python3.12
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776 && \
+    echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu/ jammy main" | tee /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-lunar.list && \
+    apt-get update && apt-get install -y python3.12 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
 
 RUN apt-get clean
 
@@ -128,4 +128,4 @@ RUN if [ "$TARGETARCH" = "amd64" ] ; then /opt/spark/bin/spark-submit --master l
 
 # Run as non-root user
 # https://spark.apache.org/docs/latest/running-on-kubernetes.html#user-identity
-#USER 185
+USER 185

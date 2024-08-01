@@ -98,7 +98,12 @@ COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
 USER root
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+# install python 3.12 - it's not available in normal ubuntu repositories
+# https://github.com/deadsnakes/issues/issues/53
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776 && \
+    echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu/ jammy main" | tee /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-lunar.list && \
+    apt-get update && apt-get install -y python3.12 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
 
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
 
