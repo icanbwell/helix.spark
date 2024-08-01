@@ -21,7 +21,7 @@ RUN cd /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.10-slim AS python_packages
+FROM python:3.12-slim AS python_packages
 
 RUN apt-get update && \
     apt-get install -y git && \
@@ -72,9 +72,9 @@ WORKDIR /helix.pipelines
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.10/site-packages/
+RUN mkdir -p /usr/local/lib/python3.12/site-packages/
 
-COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
+COPY --from=python_packages /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
 
 # get the shell commands for these packages also
 #COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
