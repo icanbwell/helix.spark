@@ -19,7 +19,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.10-slim AS python_packages
+FROM python:3.12-slim AS python_packages
 
 RUN pip debug --verbose
 
@@ -38,12 +38,12 @@ RUN python --version && \
     python -m pip install setuptools>=72.1.0 packaging>=24.1
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
+ENV PYTHONPATH="/opt/project:${PYTHONPATH}"`
 
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java17-3.3.0.19
+FROM spark:3.5.1-java17-python3
 USER root
 
 ARG TARGETPLATFORM
@@ -75,13 +75,13 @@ ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
-RUN mkdir -p /usr/local/lib/python3.10/site-packages/ && \
-    mkdir -p /usr/local/lib/python3.10/dist-packages
+RUN mkdir -p /usr/local/lib/python3.12/site-packages/ && \
+    mkdir -p /usr/local/lib/python3.12/dist-packages
 
-#COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/site-packages/
+#COPY --from=python_packages /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
 # in debian, the python packages are installed in dist-packages
 # https://stackoverflow.com/questions/9387928/whats-the-difference-between-dist-packages-and-site-packages
-COPY --from=python_packages /usr/local/lib/python3.10/site-packages/ /usr/local/lib/python3.10/dist-packages/
+COPY --from=python_packages /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/dist-packages/
 
 RUN ls -halt /opt/spark/jars/
 
@@ -109,7 +109,12 @@ COPY pom.xml /opt/pom.xml
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
 USER root
-RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
+# install python 3.12 - it's not available in normal ubuntu repositories
+# https://github.com/deadsnakes/issues/issues/53
+RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776 && \
+    echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu/ jammy main" | tee /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-lunar.list && \
+    apt-get update && apt-get install -y python3.12 && \
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
 
 RUN apt-get clean
 
