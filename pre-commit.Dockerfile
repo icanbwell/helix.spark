@@ -12,7 +12,7 @@ RUN python --version && \
     python -m pip install --upgrade --no-cache-dir pip && \
     python -m pip install --no-cache-dir wheel && \
     python -m pip install --no-cache-dir pipenv && \
-    python -m pip install setuptools>=72.1.0 packaging>=24.1 \
+    python -m pip install setuptools>=72.1.0 packaging>=24.1
 
 COPY Pipfile* ./
 
