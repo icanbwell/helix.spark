@@ -41,6 +41,8 @@ pyjwt=">=2.7.0"
 python-dateutil=">=2.8.2"
 
 [dev-packages]
+# setuptools is needed for building the package
+setuptools=">=72.1.0"
 # wheel is needed for building the package
 wheel = ">=0.43.0"
 # pre-commit is needed for running code quality checks
