@@ -5,8 +5,14 @@ RUN apt-get update && \
     pip install pipenv
 
 # Essential updates for build to succeed on arm64:
-RUN apt install -y build-essential
-RUN pip install --upgrade setuptools
+RUN apt update && \
+    apt install -y build-essential \
+
+RUN python --version && \
+    python -m pip install --upgrade --no-cache-dir pip && \
+    python -m pip install --no-cache-dir wheel && \
+    python -m pip install --no-cache-dir pipenv && \
+    python -m pip install setuptools>=72.1.0 packaging>=24.1 \
 
 COPY Pipfile* ./
 
