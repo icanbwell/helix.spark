@@ -18,6 +18,9 @@ build-minimal:
 	docker buildx build --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 #	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
+build-precommit:
+	docker build -t imranq2/helix.spark:precommit -f pre-commit.Dockerfile .
+
 shell:
 	docker compose run --rm --name helix_spark_dev dev sh
 
