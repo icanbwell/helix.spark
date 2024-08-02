@@ -1,11 +1,12 @@
-FROM python:3.10-slim
+FROM python:3.12-slim
 
 RUN apt-get update && \
     apt-get install -y git && \
     pip install pipenv
 
 # Essential updates for build to succeed on arm64:
-RUN apt install -y build-essential
+RUN apt update && \
+    apt install -y build-essential
 
 WORKDIR /sourcecode
 

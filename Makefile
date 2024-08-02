@@ -18,14 +18,17 @@ build-minimal:
 	docker buildx build --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 #	docker buildx build --platform=linux/amd64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
+build-precommit:
+	docker build -t imranq2/helix.spark:precommit -f pre-commit.Dockerfile .
+
 shell:
-	docker-compose run --rm --name helix_spark_dev dev sh
+	docker compose run --rm --name helix_spark_dev dev sh
 
 shell-minimal:
 	docker run -it imranq2/helix.spark:minimal-local /bin/sh
 
 update:
-	docker-compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev --verbose"
+	docker compose run --rm --name helix_spark_dev dev sh -c "rm -f Pipfile.lock && pipenv lock --dev --verbose"
 
 history-server:
 	docker run -v $PWD/spark-events:/tmp/spark-events -it imranq2/helix.spark:local sh
@@ -39,3 +42,8 @@ history-server:
 up:
 	docker build -t imranq2/helix.spark:local . && \
 	docker run --name spark_python --rm imranq2/helix.spark:local
+
+down: ## Brings down all the services in docker-compose
+	export DOCKER_CLIENT_TIMEOUT=300 && export COMPOSE_HTTP_TIMEOUT=300
+	docker compose down --remove-orphans && \
+	docker system prune -f
