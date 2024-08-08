@@ -38,7 +38,7 @@ RUN python --version && \
     python -m pip install setuptools>=72.1.0 packaging>=24.1
 
 ENV PYTHONPATH=/helix.pipelines
-ENV PYTHONPATH="/opt/project:${PYTHONPATH}"`
+ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 
 RUN pip list -v
 
@@ -114,7 +114,8 @@ USER root
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776 && \
     echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu/ jammy main" | tee /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-lunar.list && \
     apt-get update && apt-get install -y python3.12 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
 
 RUN apt-get clean
 
