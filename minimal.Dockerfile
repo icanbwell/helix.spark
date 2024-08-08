@@ -1,5 +1,6 @@
 # Build stage for maven packages
 FROM maven:3.8.1-openjdk-15-slim AS build
+
 # get dependencies for bsights-engine-spark
 RUN mkdir /tmp/bsights-engine-spark \
     && cd /tmp/bsights-engine-spark \
@@ -37,7 +38,7 @@ RUN python --version && \
     python -m pip install --no-cache-dir pipenv && \
     python -m pip install setuptools>=72.1.0 packaging>=24.1
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 
 RUN pip list -v
@@ -69,9 +70,9 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
     /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
-ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
+ENV CLASSPATH=/helix.spark/jars:$CLASSPATH
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 

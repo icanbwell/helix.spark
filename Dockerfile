@@ -34,14 +34,14 @@ RUN apt update && \
 RUN python --version && \
     python -m pip install --upgrade --no-cache-dir pip && \
     python -m pip install --no-cache-dir wheel && \
-    python -m pip install --no-cache-dir pre-commit && \
-    python -m pip install --no-cache-dir pipenv
+    python -m pip install --no-cache-dir pipenv && \
+    python -m pip install setuptools>=72.1.0 packaging>=24.1
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 
-COPY Pipfile* /helix.pipelines/
-WORKDIR /helix.pipelines
+COPY Pipfile* /helix.spark/
+WORKDIR /helix.spark
 
 # RUN pip debug --verbose
 RUN pipenv sync --system --extra-pip-args="--prefer-binary"
@@ -49,12 +49,19 @@ RUN pipenv sync --system --extra-pip-args="--prefer-binary"
 #RUN pip list -v
 
 # Run stage
+# Use the official Spark 3.5.1 image as the base image
 FROM spark:3.5.1-java17-python3
 USER root
 
 ARG TARGETPLATFORM
 ARG TARGETARCH
 ARG TARGETVARIANT
+
+# Install dependencies for adding a new Python version
+RUN apt-get update && apt-get install -y \
+    software-properties-common \
+    && add-apt-repository ppa:deadsnakes/ppa \
+    && apt-get update
 
 # install system packages
 RUN /usr/bin/python3 --version && \
@@ -63,12 +70,12 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
     /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
-ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
+ENV CLASSPATH=/helix.spark/jars:$CLASSPATH
 
-COPY Pipfile* /helix.pipelines/
-WORKDIR /helix.pipelines
+COPY Pipfile* /helix.spark/
+WORKDIR /helix.spark
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
@@ -78,7 +85,7 @@ COPY --from=python_packages /usr/local/lib/python3.12/site-packages/ /usr/local/
 
 # get the shell commands for these packages also
 #COPY --from=python_packages /usr/local/bin/pytest /usr/local/bin/pytest
-#COPY --from=python_packages /helix.pipelines/Pipfile* /helix.pipelines/
+#COPY --from=python_packages /helix.spark/Pipfile* /helix.spark/
 
 RUN ls -halt /opt/spark/jars/
 
@@ -107,6 +114,13 @@ RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF4
     update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
 
 # https://docs.docker.com/engine/reference/builder/#automatic-platform-args-in-the-global-scope
+
+# Confirm the Python version
+RUN python3 --version
+
+# Set environment variables for Spark
+ENV SPARK_HOME=/opt/spark
+ENV PATH=$SPARK_HOME/bin:$PATH
 
 RUN echo "I'm building for platform=$TARGETPLATFORM, architecture=$TARGETARCH, variant=$TARGETVARIANT"
 # this command below fails in Github Runner
