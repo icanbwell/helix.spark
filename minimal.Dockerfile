@@ -1,5 +1,6 @@
 # Build stage for maven packages
 FROM maven:3.8.1-openjdk-15-slim AS build
+
 # get dependencies for bsights-engine-spark
 RUN mkdir /tmp/bsights-engine-spark \
     && cd /tmp/bsights-engine-spark \
@@ -8,14 +9,14 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mkdir /tmp/spark/jars \
 #    && mvn dependency:copy-dependencies -DoutputDirectory=/tmp/spark/jars -Dhttps.protocols=TLSv1.2 \
     && ls /tmp/spark/jars \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.amazonaws:aws-java-sdk-bundle:1.12.339 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.2.2 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-hadoop-cloud_2.12:3.3.1 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.johnsnowlabs.nlp:spark-nlp_2.12:4.2.2 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.3.0 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-core_2.12:2.3.0 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-storage:2.3.0 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.databricks:spark-xml_2.12:0.15.0 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.5.1 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-hadoop-cloud_2.12:3.5.1 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.3.4 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-spark_2.12:3.2.0 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-storage:3.2.0 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.johnsnowlabs.nlp:spark-nlp_2.12:5.3.3 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.amazonaws:aws-java-sdk-bundle:1.12.262 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.3.0:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.databricks:spark-xml_2.12:0.18.0 \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
@@ -37,13 +38,13 @@ RUN python --version && \
     python -m pip install --no-cache-dir pipenv && \
     python -m pip install setuptools>=72.1.0 packaging>=24.1
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 
 RUN pip list -v
 
 # Run stage
-FROM imranq2/spark-py:java17-3.3.0.19
+FROM spark:3.5.1-java17-python3
 USER root
 
 ARG TARGETPLATFORM
@@ -69,9 +70,9 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
     /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
-ENV PYTHONPATH=/helix.pipelines
+ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
-ENV CLASSPATH=/helix.pipelines/jars:$CLASSPATH
+ENV CLASSPATH=/helix.spark/jars:$CLASSPATH
 
 COPY --from=build /tmp/spark/jars /opt/spark/jars
 
@@ -114,7 +115,8 @@ USER root
 RUN apt-key adv --keyserver hkp://keyserver.ubuntu.com:80 --recv-keys F23C5A6CF475977595C89F51BA6932366A755776 && \
     echo "deb https://ppa.launchpadcontent.net/deadsnakes/ppa/ubuntu/ jammy main" | tee /etc/apt/sources.list.d/deadsnakes-ubuntu-ppa-lunar.list && \
     apt-get update && apt-get install -y python3.12 && \
-    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1
+    update-alternatives --install /usr/bin/python python /usr/bin/python3.12 1 && \
+    update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.12 1
 
 RUN apt-get clean
 
