@@ -50,4 +50,5 @@ jobs:
           context: .
           platforms: linux/amd64, linux/arm64
           push: true
-          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }},imranq2/helix.spark:latest
+          file: minimal.Dockerfile
+          tags: imranq2/helix.spark:${{ steps.previoustag.outputs.tag }}-slim,imranq2/helix.spark:latest-slim
