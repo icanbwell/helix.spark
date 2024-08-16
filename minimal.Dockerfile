@@ -36,7 +36,8 @@ RUN python --version && \
     python -m pip install --upgrade --no-cache-dir pip && \
     python -m pip install --no-cache-dir wheel && \
     python -m pip install --no-cache-dir pipenv && \
-    python -m pip install setuptools>=72.1.0 packaging>=24.1
+    python -m pip install setuptools>=72.1.0 packaging>=24.1  && \
+    python -m pip install --no-cache-dir python-crfsuite  # doesn't have an aarch64 wheel
 
 ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
@@ -68,8 +69,7 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
     /usr/bin/python3 -m pip install --no-cache-dir wheel && \
     /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
-    /usr/bin/python3 -m pip install --no-cache-dir pipenv && \
-    /usr/bin/python3 -m pip install --no-cache-dir python-crfsuite  # doesn't have an aarch64 wheel
+    /usr/bin/python3 -m pip install --no-cache-dir pipenv
 
 ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
