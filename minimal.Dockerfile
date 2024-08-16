@@ -68,7 +68,8 @@ RUN /usr/bin/python3 --version && \
     /usr/bin/python3 -m pip install --upgrade --no-cache-dir pip && \
     /usr/bin/python3 -m pip install --no-cache-dir wheel && \
     /usr/bin/python3 -m pip install --no-cache-dir pre-commit && \
-    /usr/bin/python3 -m pip install --no-cache-dir pipenv
+    /usr/bin/python3 -m pip install --no-cache-dir pipenv && \
+    /usr/bin/python3 -m pip install --no-cache-dir python-crfsuite  # doesn't have an aarch64 wheel
 
 ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
@@ -79,7 +80,6 @@ COPY --from=build /tmp/spark/jars /opt/spark/jars
 RUN mkdir -p /usr/local/lib/python3.12/site-packages/ && \
     mkdir -p /usr/local/lib/python3.12/dist-packages
 
-#COPY --from=python_packages /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/site-packages/
 # in debian, the python packages are installed in dist-packages
 # https://stackoverflow.com/questions/9387928/whats-the-difference-between-dist-packages-and-site-packages
 COPY --from=python_packages /usr/local/lib/python3.12/site-packages/ /usr/local/lib/python3.12/dist-packages/

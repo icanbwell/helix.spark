@@ -7,6 +7,5 @@ services:
       context: .
     volumes:
     - ./:/helix.spark/:rw
-    - ~/.local/share/virtualenvs:/root/.local/share/virtualenvs:rw
     container_name: helix_spark_dev
     working_dir: /helix.spark
