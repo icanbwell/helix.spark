@@ -22,7 +22,7 @@ build_init:
 
 build:
 	#docker image rm imranq2/helix.spark:minimal-local || echo "no image"
-	docker buildx build --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
+	docker buildx build --progress=plain --platform=linux/arm64 -f minimal.Dockerfile -t imranq2/helix.spark:minimal-local .
 
 build-precommit-slim:
 	docker build -f pre-commit-slim.Dockerfile -t imranq2/helix.spark:precommit-slim .
