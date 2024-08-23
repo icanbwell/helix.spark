@@ -28,6 +28,7 @@ build-precommit-slim:
 	docker build -f pre-commit-slim.Dockerfile -t imranq2/helix.spark:precommit-slim .
 
 shell:
+	docker compose --progress=plain build --no-cache && \
 	docker compose run --rm --name helix_spark_dev dev sh
 
 history-server:
