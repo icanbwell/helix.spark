@@ -20,7 +20,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
-FROM python:3.12-slim AS python_packages
+FROM python:3.12-slim-bookworm AS python_packages
 
 RUN pip debug --verbose
 
@@ -37,7 +37,7 @@ RUN python --version && \
     python -m pip install --no-cache-dir wheel && \
     python -m pip install --no-cache-dir pipenv && \
     python -m pip install setuptools>=72.1.0 packaging>=24.1  && \
-    python -m pip install --no-cache-dir python-crfsuite  # doesn't have an aarch64 wheel
+    python -m pip install --no-cache-dir python-crfsuite==0.9.10  # doesn't have an aarch64 wheel
 
 ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
