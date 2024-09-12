@@ -15,7 +15,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-spark_2.12:3.2.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-storage:3.2.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.johnsnowlabs.nlp:spark-nlp_2.12:5.4.1 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=software.amazon.awssdk:bundle-sdk:2.27.23 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=software.amazon.awssdk:bundle-sdk:2.23.19 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.databricks:spark-xml_2.12:0.18.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-streaming-kafka-0-10_2.12:3.5.1 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-token-provider-kafka-0-10_2.12:3.5.1 \
