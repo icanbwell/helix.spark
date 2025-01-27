@@ -42,7 +42,7 @@ RUN python --version && \
     python -m pip install --no-cache-dir wheel && \
     python -m pip install --no-cache-dir pipenv && \
     python -m pip install setuptools>=72.1.0 packaging>=24.1  && \
-    python -m pip install --no-cache-dir python-crfsuite==0.9.10  # doesn't have an aarch64 wheel
+    python -m pip install --no-cache-dir python-crfsuite==0.9.10  # does not have an aarch64 wheel
 
 ENV PYTHONPATH=/helix.spark
 ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
@@ -110,7 +110,6 @@ ENV HADOOP_CONF_DIR=/opt/spark/conf
 #RUN update-alternatives --install /usr/bin/python python /usr/bin/python3 1
 
 COPY minimal_entrypoint.sh /opt/minimal_entrypoint.sh
-COPY pom.xml /opt/pom.xml
 
 RUN chmod a+x /opt/minimal_entrypoint.sh
 
