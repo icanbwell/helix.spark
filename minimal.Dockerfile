@@ -1,5 +1,5 @@
 # Build stage for maven packages
-FROM maven:3.9.5-eclipse-temurin-17-focal AS build
+FROM maven:3.9.9-eclipse-temurin-17-focal AS build
 
 # get dependencies for bsights-engine-spark
 RUN mkdir /tmp/bsights-engine-spark \
@@ -9,9 +9,9 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mkdir /tmp/spark/jars \
 #    && mvn dependency:copy-dependencies -DoutputDirectory=/tmp/spark/jars -Dhttps.protocols=TLSv1.2 \
     && ls /tmp/spark/jars \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.1 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-hadoop-cloud_2.12:3.5.1 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.3.4 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.4.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-spark_2.12:3.2.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-storage:3.2.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.johnsnowlabs.nlp:spark-nlp_2.12:5.4.1 \
@@ -20,7 +20,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-streaming-kafka-0-10_2.12:3.5.1 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-token-provider-kafka-0-10_2.12:3.5.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.commons:commons-pool2:2.12.0 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.kafka:kafka-clients:3.8.0 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.kafka:kafka-clients:3.8.1 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=mysql:mysql-connector-java:8.0.33 \
     && ls /tmp/spark/jars
 
