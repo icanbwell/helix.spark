@@ -50,7 +50,7 @@ ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 RUN pip list -v
 
 # Run stage
-FROM spark:3.5.1-java17-python3
+FROM spark:3.5.5-java17-python3
 USER root
 
 ARG TARGETPLATFORM
