@@ -21,7 +21,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-token-provider-kafka-0-10_2.12:3.5.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.commons:commons-pool2:2.12.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.kafka:kafka-clients:3.8.1 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=mysql:mysql-connector-java:8.0.33 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=mysql:mysql-connector-java:8.2 \
     && ls /tmp/spark/jars
 
 # Build stage for pip packages
