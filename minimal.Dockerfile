@@ -11,7 +11,7 @@ RUN mkdir /tmp/bsights-engine-spark \
     && ls /tmp/spark/jars \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-sql-kafka-0-10_2.12:3.4.2 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.spark:spark-hadoop-cloud_2.12:3.5.1 \
-    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.4.0 \
+    && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=org.apache.hadoop:hadoop-aws:3.3.4 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-spark_2.12:3.2.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=io.delta:delta-storage:3.2.0 \
     && mvn org.apache.maven.plugins:maven-dependency-plugin:3.7.1:copy -DoutputDirectory=/tmp/spark/jars -DrepoUrl=https://download.java.net/maven/2/ -Dartifact=com.johnsnowlabs.nlp:spark-nlp_2.12:5.4.1 \
@@ -50,7 +50,7 @@ ENV PYTHONPATH="/opt/project:${PYTHONPATH}"
 RUN pip list -v
 
 # Run stage
-FROM spark:3.5.1-java17-python3
+FROM spark:3.5.5-java17-python3
 USER root
 
 ARG TARGETPLATFORM
